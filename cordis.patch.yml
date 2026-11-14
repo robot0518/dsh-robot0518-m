@@ -1,0 +1,4 @@
+# dsh-robot0518-m bundle patch：单行 insert，把本插件的 Host 半边（收录 skill 的随包提供方）挂进 loader。
+- insert:
+    - id: robot0518-m
+      name: 'dsh-robot0518-m'
