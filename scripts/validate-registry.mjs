@@ -1,5 +1,5 @@
 /**
- * 个人市场清单校验：与本机 dsh-m（0.12.x）src/core/registry.ts 的 validateRegistry v1 语义对齐，
+ * 个人市场清单校验：与本机 dsh-m（0.12.x，src/core/registry.ts 最新 main）的 validateRegistry v1 语义对齐，
  * 保证 registry.json 能通过 dsh-m 的严格校验（自定义收录清单 / 默认清单同一 schema）。
  * 零依赖：node scripts/validate-registry.mjs
  */
@@ -10,9 +10,9 @@ import { dirname, join } from 'node:path'
 const root = dirname(fileURLToPath(import.meta.url)) + '/..'
 const raw = JSON.parse(readFileSync(join(root, 'registry.json'), 'utf8'))
 
-const CATEGORIES = ['market', 'tools', 'ui', 'search', 'other']
+const CATEGORIES = ['essentials', 'cui-picks', 'baoyu', 'guizang', 'self-dev', 'tencent-lighthouse', 'watchlist']
 const TOP_LEVEL_KEYS = new Set(['version', 'plugins'])
-const ENTRY_KEYS = new Set(['id', 'name', 'description', 'category', 'tags', 'source', 'npm', 'github', 'homepage', 'icon', 'verified'])
+const ENTRY_KEYS = new Set(['id', 'name', 'description', 'category', 'tags', 'source', 'npm', 'github', 'homepage', 'icon', 'verified', 'alsoCategories', 'decoupled', 'audience'])
 const ID_RE = /^[a-z0-9][a-z0-9._-]*$/
 const NPM_RE = /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/
 const GITHUB_RE = /^[A-Za-z0-9][A-Za-z0-9-]*\/[A-Za-z0-9._-]+$/
@@ -75,6 +75,10 @@ raw.plugins.forEach((e, index) => {
     const problem = httpsUrlError(String(e[key]).trim())
     if (problem) fail(`${where}.${key}: ${problem}`)
   }
+  // verified（可选精确 semver 数组）与 decoupled（可选恒 true）互斥
+  if (e.verified !== undefined && e.decoupled !== undefined) {
+    fail(`${where}: verified 与 decoupled 互斥`)
+  }
   if (e.verified !== undefined) {
     if (!Array.isArray(e.verified)) fail(`${where}.verified: 必须是字符串数组`)
     else {
@@ -85,6 +89,22 @@ raw.plugins.forEach((e, index) => {
         if (list.includes(v)) fail(`${where}.verified[${vi}]: 重复 ${v}`)
         list.push(v)
       })
+    }
+  }
+  if (e.decoupled !== undefined && e.decoupled !== true) fail(`${where}.decoupled: 只声明 true`)
+  if (e.audience !== undefined && e.audience !== 'public' && e.audience !== 'internal') {
+    fail(`${where}.audience: 只允许 public / internal`)
+  }
+  if (e.alsoCategories !== undefined) {
+    if (!Array.isArray(e.alsoCategories)) fail(`${where}.alsoCategories: 必须是字符串数组`)
+    else {
+      const list = []
+      for (const c of e.alsoCategories) {
+        if (!CATEGORIES.includes(c)) fail(`${where}.alsoCategories: 无效 ${JSON.stringify(c)}`)
+        else if (c === e.category) fail(`${where}.alsoCategories: 不得含主 category`)
+        else if (list.includes(c)) fail(`${where}.alsoCategories: 重复 ${c}`)
+        else list.push(c)
+      }
     }
   }
 })
