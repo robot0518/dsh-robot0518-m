@@ -1,6 +1,6 @@
 ---
 name: music-download
-description: B站无损音乐下载：Hi-Res FLAC 优先、AAC 兜底，自动写标签、嵌封面、记账。Use when the user asks 下载这首歌/下首歌/无损音乐/B站音乐/Hi-Res/歌手歌名批量下载，gives a bilibili 音乐或歌单 URL, or reports 下载的音乐没有封面/没有歌手名/音质不对.
+description: B站无损音乐下载：Hi-Res FLAC 优先、AAC 兜底。用户要下载 B站歌曲/无损音乐/Hi-Res、给 bilibili 音乐或歌单 URL，或报告下载的音乐缺封面/缺歌手名/音质不对时使用。
 ---
 
 # B站无损音乐下载
@@ -93,22 +93,8 @@ description: B站无损音乐下载：Hi-Res FLAC 优先、AAC 兜底，自动�
 - 处置：请用户在已登录的 Edge 里用 **Cookie-Editor** 扩展（商店 ID `neaplmfkghagebokkhpjpoebhdledlfi`，国内可达；商店里同名 "get cookies txt" 有恶意前科，只认 Cookie-Editor）导出 Netscape 格式，覆盖更新 `bilibili.cookies.txt`，重跑上面的验证直到 `isLogin=True`。`--cookies-from-browser edge` 在本机是死路（DPAPI 应用绑定加密，必报解密失败），不要尝试。
 - 红线：cookie 文件等于账号钥匙——不读取内容、不在终端输出、不外传、不复制。
 
-## 批量入口（reference）
+## 批量与格式（分支引用）
 
-- 收藏夹（`favlist` URL）、合集、UP主空间页 URL 直接传入主流程同一命令；大列表追加 `--sleep-interval 2 --max-sleep-interval 5` 防风控，并挂进度窗跑。
-- 已实测 `bilisearch`（yt-dlp 站内搜索）被 B站 412 风控拒绝——找歌先用网页搜索拿到具体视频 URL，再走本 skill。
-- 账本是进程启动时的内存快照：同一批量任务同一时间只跑一个；**绝不**对同一 URL 并发起两个 yt-dlp（同名 `.part` 交错写坏是唯一损坏场景）。
-- 升音质重下（旧账本记了 AAC、现在 cookie 有效想拿 FLAC）：先删 `downloaded.music.txt` 里对应行，只许 `Add-Content` 追加、禁止整文件重写。
-
-## FLAC 封面与转码红线（reference）
-
-- m4a 封面嵌入实测由 yt-dlp 自带 mutagen 完成；flac 嵌封面若报 mutagen 错误，改用 ffmpeg 手动（`attached_pic`）：
-
-  ```powershell
-  & "$env:LOCALAPPDATA\Programs\yt-dlp\ffmpeg.exe" -y -i "<音频>" -i "<封面>" `
-    -map 0:a -map 1:v -c copy -disposition:v attached_pic `
-    -metadata title="<标题>" -metadata artist="<UP主>" "<输出.flac>"
-  ```
-
-- 追加 `--audio-format mp3`/`m4a` 会破坏无损：mp3 对 AAC 源是二次有损转码，m4a 遇 FLAC 源被强制转 AAC。要兼容格式先无损落盘，再另存转码副本，不覆盖原件。
+- 用户给收藏夹（`favlist`）、合集、UP主空间页 URL，要找歌/批量下载，或升音质重下（旧账本记了 AAC、现在想拿 FLAC）时：读 [references/batch.md](references/batch.md)（防风控参数、账本并发红线、升音质重下规矩）。
+- 要转 mp3/m4a 兼容格式，或 flac 嵌封面报 mutagen 错误时：读 [references/formats.md](references/formats.md)（ffmpeg 手动嵌封面命令、转码红线）。
 - 版权边界：仅限个人离线使用，不协助二次传播。

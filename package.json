@@ -1,6 +1,6 @@
 {
   "name": "dsh-robot0518-m",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "robot0518 的 DSH skill 收录市场：随包提供自产 skill（B站无损下载、塔科夫联机诊断、视频转笔记），经 dsh-m 市场安装升级，装后 ctx.skills 全局可用。",
   "type": "module",
   "main": "lib/index.js",

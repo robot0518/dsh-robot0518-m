@@ -1,6 +1,6 @@
 ---
 name: video-to-notes
-description: Use immediately for any bare YouTube or YouTube Shorts URL, youtu.be link, Bilibili or b23.tv link, or other video URL; do not ask what the user wants. Treat a message containing only a supported video URL as a request to create timestamped notes and a report, then publish to the configured local, Notion, or Obsidian target. Also use for video transcription, summaries, subtitles, reports, publishing, syncing, and dashboards.
+description: Use immediately for any video URL (YouTube, Shorts, youtu.be, Bilibili, b23.tv): a bare link is a complete request for timestamped notes and a report, published to the configured local, Notion, or Obsidian target. Also use for transcription, subtitles, summaries, and dashboards.
 ---
 
 # Video to Notes

@@ -16,6 +16,11 @@
 3. 签名不同 → `PYTHONIOENCODING=utf-8 <捆绑Python> scripts/dump_scan.py <dump路径>` 扫 Chromium CHECK/FATAL 字符串，按新断言重新定性
 4. 环境信息（GPU/CPU/RAM/OS/Steam manifest）用 `scripts/bsg_env.ps1`
 
-**启动器日志位置**（2026-11-15 定位）：`%LOCALAPPDATA%\Battlestate Games\BsgLauncher\Logs\BSG_Launcher_YYYYMMDD.log`（一天一个）+ `Cef.log`；行格式 `2026.11.14 18:42:28.706 +08:00 [INFO] ...`。注意：崩溃时刻本身不留日志行（进程死于断点异常，Serilog 缓冲随之丢失），只能看最后写入的活动行推断当时操作。Roaming 下只有 3KB 的 `settings`；CefCache 整个在 LOCALAPPDATA。**上次教训：先搜 Roaming 扑空了——Battlestate Games 的数据在 LOCALAPPDATA，两处都要探。**
+**启动器日志位置**（2026-11-15 定位）：
+
+- `%LOCALAPPDATA%\Battlestate Games\BsgLauncher\Logs\BSG_Launcher_YYYYMMDD.log`（一天一个）+ `Cef.log`；行格式 `2026.11.14 18:42:28.706 +08:00 [INFO] ...`
+- 崩溃时刻本身不留日志行（进程死于断点异常，Serilog 缓冲随之丢失）——只能看最后写入的活动行推断当时操作
+- Roaming 下只有 3KB 的 `settings`；CefCache 整个在 LOCALAPPDATA
+- **上次教训：先搜 Roaming 扑空了——Battlestate Games 的数据在 LOCALAPPDATA，两处都要探**
 
 **工单跟进**：BSG 回复出现在工单页并发账号邮箱；工单评论区附件限 5 文件 × 3MB，minidump ~70MB 传不了，官方要 dump 需另寻通道。
