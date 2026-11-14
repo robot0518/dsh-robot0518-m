@@ -12,7 +12,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 20
-      - run: npm run validate
+      - name: Registry validation
+        run: npm run validate
 
   # 快照新鲜度：vendored skills/ 必须与收录事实源（dsh-skills）逐字节一致。
   # dsh-skills 为私有仓，经只读 deploy key（secret: DSH_SKILLS_DEPLOY_KEY）checkout；
@@ -29,5 +30,5 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 20
-      - run: node scripts/vendor.mjs
+      - run: node scripts/vendor.mjs --from dsh-skills/skills
       - run: git diff --exit-code skills/
