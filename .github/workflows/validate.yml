@@ -8,8 +8,26 @@ jobs:
   validate-registry:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
       - run: npm run validate
+
+  # 快照新鲜度：vendored skills/ 必须与收录事实源（dsh-skills）逐字节一致。
+  # dsh-skills 为私有仓，经只读 deploy key（secret: DSH_SKILLS_DEPLOY_KEY）checkout；
+  # vendor.mjs 后 git diff 非空 = 忘跑 vendor，红。
+  vendor-freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          repository: robot0518/dsh-skills
+          path: dsh-skills
+          ssh-key: ${{ secrets.DSH_SKILLS_DEPLOY_KEY }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+      - run: node scripts/vendor.mjs
+      - run: git diff --exit-code skills/
