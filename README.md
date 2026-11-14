@@ -12,11 +12,18 @@ DeepSeek Harness 插件：把自产 skill **随包收录**，经 [dsh-m](https:/
 
 收录事实源在 [dsh-skills](https://github.com/robot0518/dsh-skills)（registry + 一键安装脚本的文件级安装通道）；本插件是**第二分发通道**：随包快照、零配置生效。
 
-## 安装（经 dsh-m 市场）
+## 安装（经 dsh-m 市场 · 自定义收录清单）
 
-- 收录进默认清单时：侧栏「插件市场」搜索 `dsh-robot0518-m` 卡片展开安装；
-- 或用自定义收录清单：dsh-m 设置页填入本仓库 `registry.json` 的 raw 地址（`https://raw.githubusercontent.com/robot0518/dsh-robot0518-m/main/registry.json`）校验并应用；
-- 或贴给 agent：`安装并启用 DSH 插件 dsh-robot0518-m，装完重启 DSH 生效`。
+收录清单是**本仓库的 `registry.json`**（robot0518 自有，不进 iasiv5/dsh-m 默认清单）：
+
+- dsh-m 侧栏「插件市场」→ 设置页 → 自定义收录清单，填入：
+
+  ```
+  https://raw.githubusercontent.com/robot0518/dsh-robot0518-m/main/registry.json
+  ```
+
+  点「校验并应用」，即时生效；「恢复默认」可随时切回官方清单（注意：自定义清单**整体覆盖**默认清单，不合并）。
+- 或贴给 agent：`把 dsh-m 的自定义收录清单设为 https://raw.githubusercontent.com/robot0518/dsh-robot0518-m/main/registry.json 并校验应用，然后安装插件 dsh-robot0518-m`。
 
 ## 优先级（rank 语义）
 
